@@ -1,0 +1,46 @@
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Atlantis
+atlantis.yaml
+.lock.hcl
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+
+# Cloud
+service-account.json
+gcloud-config/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux/Unix
+.cache/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
