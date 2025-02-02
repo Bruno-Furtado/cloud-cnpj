@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Variáveis
+PROJECT="cloud-cnpj"
+DATASET="gold"
+TABLE="estabelecimentos"
+
+# Verifica se já há um usuário autenticado
+if ! gcloud auth list --format="value(account)" | grep -q .; then
+    echo "Nenhuma conta autenticada. Realizando login..."
+    gcloud auth login
+else
+    echo "Usuário já autenticado."
+fi
+
+# Define o projeto em uso
+gcloud config set project $PROJECT
+
+# Liberar acesso público
+bq add-iam-policy-binding \
+    --member=allUsers \
+    --role=roles/bigquery.dataViewer \
+    "$PROJECT:$DATASET.$TABLE"

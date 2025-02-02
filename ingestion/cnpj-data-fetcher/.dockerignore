@@ -1,0 +1,5 @@
+.git
+.env
+deploy.sh
+node_modules
+README.md

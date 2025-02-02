@@ -1,10 +1,20 @@
-# 📜 Guia de Contribuição
+# 📜 Guia de contribuição
 
 Obrigado por considerar contribuir para o **Cloud CNPJ**! Este projeto é open-source e valorizamos sua colaboração. Siga estas diretrizes para garantir que sua contribuição seja integrada de forma eficiente.
 
-## 📌 Como Contribuir
+## 🏗 Estrutura
 
-1. **Faça um Fork** do repositório e clone localmente:
+```
+├── cloud-cnpj/
+│   ├── 00-orchestration/   # Controla as triggers de ingestão, transformação e distribuição
+│   ├── 01-ingestion/       # Obtêm dados oficiais da Receita e armazenamento em storage
+│   ├── 02-transformation/  # Trata os dados da Receita e os armazena em datalake próprio
+│   ├── 03-distribution/    # Disponibiliza os dados em uma API
+```
+
+## 🪛 Como contribuir
+
+1. **Faça um fork** do repositório e clone localmente:
    ```bash
    git clone https://github.com/Bruno-Furtado/cloud-cnpj.git
    cd cloud-cnpj
@@ -22,30 +32,23 @@ Obrigado por considerar contribuir para o **Cloud CNPJ**! Este projeto é open-s
    git commit -m "Descrição curta e clara da alteração"
    ```
 
-5. **Envie para seu fork e abra um Pull Request**:
+5. **Envie para seu fork e abra um pull request**:
    ```bash
    git push origin minha-feature
    ```
 
-6. **Abra um Pull Request (PR) no repositório principal** e descreva sua alteração.
+6. **Abra um pull request (PR) no repositório principal** e descreva sua alteração.
 
-## 📜 Boas Práticas
+## 🥇 Boas práticas
 
 - Utilize uma linguagem clara e objetiva.
 - Certifique-se de que suas alterações seguem a estrutura do projeto.
 - Sempre crie um PR para revisão antes de mesclar no branch principal.
 - Adicione documentação quando necessário.
 
-## 🏗 Estrutura do Projeto
-
-- **infra/**: Infraestrutura como código (Terraform)
-- **api/**: Código da API no Cloud Run
-- **functions/**: Cloud Functions
-- **datasets/**: Esquema do BigQuery
-- **docs/**: Documentação do projeto
-
 ## 📢 Contato
-Caso tenha dúvidas, sugestões ou precise de ajuda, entre em contato com **Bruno** (@seu-usuario no GitHub) ou abra uma **Issue** no repositório.
+
+Caso tenha dúvidas, sugestões ou precise de ajuda, entre em contato com [@Bruno-Furtado](https://github.com/Bruno-Furtado) ou abra uma [issue](https://github.com/Bruno-Furtado/cloud-cnpj/issues) no repositório.
 
 Agradecemos sua contribuição! 🚀
 
