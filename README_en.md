@@ -19,7 +19,7 @@ The entire infrastructure for obtaining, processing, and distributing the data i
 
 <p align="center">
   <br/>
-  <img src="https://firebasestorage.googleapis.com/v0/b/cloud-cnpj.firebasestorage.app/o/images%2Fflow.webp?alt=media&token=385b6e27-4f8b-4141-85dd-9aebef6f13a7" width="500" alt="Cloud CNPJ">
+  <img src="https://firebasestorage.googleapis.com/v0/b/cloud-cnpj.firebasestorage.app/o/images%2Fflow_v2.webp?alt=media&token=ec153049-edbe-4772-bba5-0b23966aba36" width="500" alt="Cloud CNPJ">
 </p>
 
 ### 1. Ingestion

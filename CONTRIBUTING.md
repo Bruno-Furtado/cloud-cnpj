@@ -6,10 +6,10 @@ Obrigado por considerar contribuir para o **Cloud CNPJ**! Este projeto é open-s
 
 ```
 ├── cloud-cnpj/
-│   ├── 00-orchestration/   # Controla as triggers de ingestão, transformação e distribuição
-│   ├── 01-ingestion/       # Obtêm dados oficiais da Receita e armazenamento em storage
-│   ├── 02-transformation/  # Trata os dados da Receita e os armazena em datalake próprio
-│   ├── 03-distribution/    # Disponibiliza os dados em uma API
+│   ├── ingestion/   # obtem dados da Receita
+│   ├── prepare/     # trata os dados
+│   ├── use/         # disponibiliza os dados
+│   ├── workflow/    # orquestra as etapas citadas acima
 ```
 
 ## 🪛 Como contribuir
