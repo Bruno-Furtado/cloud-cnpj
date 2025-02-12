@@ -43,7 +43,8 @@ for NAME in "${TRANSFERS[@]}"; do
             \"file_format\": \"CSV\",
             \"field_delimiter\": \";\",
             \"delete_source_files\": \"true\",
-            \"preserve_ascii_control_characters\": \"true\"
+            \"preserve_ascii_control_characters\": \"true\",
+            \"allow_quoted_newlines\": \"true\"
         }"
 
     echo "Transferência ${NAME} criada com sucesso!"
