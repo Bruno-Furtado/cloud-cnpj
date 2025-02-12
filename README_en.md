@@ -1,3 +1,5 @@
+![Data Updated](https://img.shields.io/badge/Data_Updated-2025/02-green)
+
 <p>
     <small>🇧🇷 <a href="README.md">Versão em português</a></small>
 </p>
