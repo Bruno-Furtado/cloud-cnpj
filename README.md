@@ -1,3 +1,6 @@
+![Dados Atualizados](https://img.shields.io/badge/Dados_Atualizados-2025/02-green)
+
+
 <p>
   <small>🇺🇸 <a href="README_en.md">English version</a></small>
 </p>
