@@ -68,4 +68,9 @@ gcloud run jobs create $JOB_NAME \
 # Adiciona permissão para o Cloud Run acessar o BigQuery
 gcloud projects add-iam-policy-binding $PROJECT \
     --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
-    --role="roles/bigquery.dataViewer"
+    --role="roles/bigquery.dataViewer"gcloud projects add-iam-policy-binding cloud-cnpj \
+    --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+    --role="roles/bigquery.jobUser"
+gcloud projects add-iam-policy-binding cloud-cnpj \
+    --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+    --role="roles/datastore.user"
