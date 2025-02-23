@@ -24,7 +24,7 @@ const run = async () => {
         }
 
         logger.info("Migração concluída com sucesso!", functionName);
-        await alert.send(`✅ Migração finalizada! Total de registros migrados: ${totalProcessed}`);
+        await alert.send(`🫡 Migração finalizada! Total de registros migrados: ${totalProcessed}`);
     } catch (e) {
         logger.error(e, functionName);
         await alert.send(`❌ Falha na migração: ${e.message}`);
