@@ -18,65 +18,19 @@ main:
           args:
             name: ${"namespaces/" + globals.project_id + "/jobs/" + globals.job_name}
             location: ${globals.location}
+            connector_params:
+              timeout: 43200
           result: job_response
         except:
           as: job_error
           steps:
-            - handle_job_error:
-                next: wait_for_job_completion
-
-    - wait_for_job_completion:
-        steps:
-          - sleep_before_checking:
-              call: sys.sleep
-              args:
-                seconds: 600
-
-          - check_job_status:
-              call: googleapis.run.v1.namespaces.jobs.get
-              args:
-                name: ${"namespaces/" + globals.project_id + "/jobs/" + globals.job_name}
-                location: ${globals.location}
-              result: job_response
-
-          - extract_job_conditions:
-              assign:
-                - job_conditions: ${job_response.status.conditions}
-                - job_completed: false
-                - job_failed: false
-
-          - process_job_conditions:
-              for:
-                value: condition
-                in: ${job_conditions}
-                steps:
-                  - check_job_completed:
-                      switch:
-                        - condition: ${(condition.type == "Completed" or condition.type == "Ready") and condition.status == "True"}
-                          assign:
-                            - job_completed: true
-                  - check_job_failed:
-                      switch:
-                        - condition: ${(condition.type == "Completed" or condition.type == "Ready") and condition.status == "False"}
-                          assign:
-                            - job_failed: true
-
-          - check_job_conditions:
-              switch:
-                - condition: ${job_failed}
-                  next: send_job_status_failure_alert
-                - condition: ${job_completed}
-                  next: send_job_status_success_alert
-                - condition: true
-                  next: sleep_before_checking
-
-    - send_job_status_failure_alert:
-        call: log_and_alert
-        args:
-          message: ${"❌ O Cloud Run Job " + globals.job_name + " finalizou com falha."}
-          severity: "ERROR"
-          globals: ${globals}
-        next: workflow_end
+            - send_job_status_failure_alert:
+                call: log_and_alert
+                args:
+                  message: ${"❌ O Cloud Run Job " + globals.job_name + " finalizou com falha."}
+                  severity: "ERROR"
+                  globals: ${globals}
+                next: workflow_end
 
     - send_job_status_success_alert:
         call: log_and_alert
