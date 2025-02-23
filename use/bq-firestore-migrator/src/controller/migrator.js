@@ -19,8 +19,8 @@ const run = async () => {
         for await (const batch of bigquery.fetchEstabelecimentos()) {
             await firestore.saveEstabelecimentos(batch);
             totalProcessed += batch.length;
-            logger.info(`📦 Lote processado com ${batch.length} registros. Total até agora: ${totalProcessed}`, functionName);
-            break;
+            logger.info(`Lote processado com ${batch.length} registros. Total até agora: ${totalProcessed}`, functionName);
+            await alert.send(`📦 Lote processado com ${batch.length} registros. Total até agora: ${totalProcessed}`);
         }
 
         logger.info("Migração concluída com sucesso!", functionName);
