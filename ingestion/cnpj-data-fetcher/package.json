@@ -1,5 +1,5 @@
 {
-  "name": "cnpr-data-fetcher",
+  "name": "cnpj-data-fetcher",
   "version": "1.0.0",
   "description": "Job para baixar e extrair os dados públicos de CNPJs do site oficial da Receita Federal.",
   "main": "src/main.js",
