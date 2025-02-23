@@ -21,7 +21,7 @@ Toda a infraestrutura para obtenção, tratamento e distribuição dos dados est
 
 <p align="center">
   <br/>
-  <img src="https://firebasestorage.googleapis.com/v0/b/cloud-cnpj.firebasestorage.app/o/images%2Fflow_v2.webp?alt=media&token=ec153049-edbe-4772-bba5-0b23966aba36" width="500" alt="Cloud CNPJ">
+  <img src="https://firebasestorage.googleapis.com/v0/b/cloud-cnpj.firebasestorage.app/o/images%2Fflow_v3.webp?alt=media&token=9c487c8f-ef7b-4455-9fb3-174f3afea037" width="500" alt="Cloud CNPJ">
 </p>
 
 ### 1. Ingestão
