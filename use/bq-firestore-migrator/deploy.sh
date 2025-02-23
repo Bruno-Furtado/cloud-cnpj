@@ -2,6 +2,7 @@
 
 # Variáveis
 PROJECT="cloud-cnpj"
+PROJECT_NUMBER=""
 BUCKET="cloud-cnpj"
 REGION="us-central1"
 JOB_NAME="bq-firestore-migrator"
@@ -25,6 +26,7 @@ fi
 # Define o projeto em uso
 gcloud config set project $PROJECT
 
+# Habilite os serviços
 gcloud services enable run.googleapis.com \
     cloudbuild.googleapis.com \
     artifactregistry.googleapis.com \
@@ -62,3 +64,8 @@ gcloud run jobs create $JOB_NAME \
     --set-env-vars LOG_ENABLED=$LOG_ENABLED \
     --set-env-vars SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL \
     --set-env-vars SLACK_NOTIFICATIONS_ENABLED=$SLACK_NOTIFICATIONS_ENABLED
+
+# Adiciona permissão para o Cloud Run acessar o BigQuery
+gcloud projects add-iam-policy-binding $PROJECT \
+    --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+    --role="roles/bigquery.dataViewer"
