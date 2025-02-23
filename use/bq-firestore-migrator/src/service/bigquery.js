@@ -20,7 +20,7 @@ async function* fetchEstabelecimentos() {
     const functionName = helper.getStackTraceDetails();
     logger.info('Buscando dados do BigQuery...', functionName);
 
-    const query = `SELECT * FROM \`${env.project}.${env.dataset}.${env.table}\` ORDER BY cnpj`;
+    const query = `SELECT * FROM \`${env.project}.${env.dataset}.${env.table}\``;
 
     try {
         const [job] = await bigquery.createQueryJob({ query, location: env.region });
