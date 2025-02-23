@@ -50,7 +50,8 @@ Novamente, caso ainda não tenha verificado, certifique-se de possuir o [Google 
 gcloud workflows execute $FLOW_NAME \
     --location=$LOCATION \
     --data='{
-      "job_name": $JOB_NAME,
+      "ingestion_job_name": $INGESTION_JOB_NAME,
+      "use_job_name": $USE_JOB_NAME,
       "location": $LOCATION,
       "project_id": $PROJECT_ID,
       "slack_webhook_url": $SLACK_WEBHOOK_URL,

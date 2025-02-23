@@ -12,11 +12,11 @@ main:
           severity: "INFO"
           globals: ${globals}
 
-    - start_job:
+    - start_ingestion_job:
         try:
           call: googleapis.run.v1.namespaces.jobs.run
           args:
-            name: ${"namespaces/" + globals.project_id + "/jobs/" + globals.job_name}
+            name: ${"namespaces/" + globals.project_id + "/jobs/" + globals.ingestion_job_name}
             location: ${globals.location}
             connector_params:
               timeout: 43200
@@ -24,10 +24,10 @@ main:
         except:
           as: job_error
           steps:
-            - send_job_status_failure_alert:
+            - send_ingestion_job_status_failure_alert:
                 call: log_and_alert
                 args:
-                  message: ${"❌ O Cloud Run Job " + globals.job_name + " finalizou com falha."}
+                  message: ${"❌ O Cloud Run Job " + globals.ingestion_job_name + " finalizou com falha."}
                   severity: "ERROR"
                   globals: ${globals}
                 next: workflow_end
@@ -35,7 +35,7 @@ main:
     - send_job_status_success_alert:
         call: log_and_alert
         args:
-          message: ${"✅ O Cloud Run Job " + globals.job_name + " finalizou com sucesso."}
+          message: ${"✅ O Cloud Run Job " + globals.ingestion_job_name + " finalizou com sucesso e os transfers iniciaram..."}
           severity: "INFO"
           globals: ${globals}
         next: trigger_transfers
@@ -129,7 +129,27 @@ main:
         args:
           transfer_id: ${globals.scheduled_query.id}
           transfer_name: ${globals.scheduled_query.name}
-          globals: ${globals} 
+          globals: ${globals}
+
+    - start_use_job:
+        try:
+          call: googleapis.run.v1.namespaces.jobs.run
+          args:
+            name: ${"namespaces/" + globals.project_id + "/jobs/" + globals.use_job_name}
+            location: ${globals.location}
+            connector_params:
+              timeout: 43200
+          result: job_response
+        except:
+          as: job_error
+          steps:
+            - send_use_job_status_failure_alert:
+                call: log_and_alert
+                args:
+                  message: ${"❌ O Cloud Run Job " + globals.use_job_name + " finalizou com falha."}
+                  severity: "ERROR"
+                  globals: ${globals}
+                next: workflow_end
 
     - send_final_alert:
         call: log_and_alert
