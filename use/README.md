@@ -5,7 +5,7 @@ Nesta etapa, a principal função é disponibilizar os dados para consumo, garan
 ## 🏗 Estrutura
 
 ```
-├── cnpj-data-distributor/  # Job que leva os dados do BigQuery para um banco de baixa latência
+├── bq-firestore-migrator/  # Job que leva os dados do BigQuery para um banco de baixa latência
 ├── deploy.sh               # Script para tornar tabelas públicas
 ├── README.md
 ```
