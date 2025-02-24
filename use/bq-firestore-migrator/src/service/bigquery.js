@@ -5,54 +5,55 @@ import logger from "../util/logger.js";
 
 /**
  * Serviço responsável por buscar dados do BigQuery.
- * 
+ *
  * @module service/bigquery
  */
 const bigquery = new BigQuery({ location: env.region });
 
 /**
  * Obtém os estabelecimentos do BigQuery de forma paginada para evitar sobrecarga de memória.
- * 
+ *
  * @returns {AsyncGenerator<Object[]>} Gerador assíncrono que retorna lotes de estabelecimentos.
  * @throws {Error} Se houver falha na consulta ao BigQuery.
  */
 async function* fetchEstabelecimentos() {
     const functionName = helper.getStackTraceDetails();
-    logger.info('Buscando dados do BigQuery...', functionName);
+    logger.info('Iniciando busca de dados no BigQuery...', functionName);
 
-    const query = `SELECT * FROM \`${env.project}.${env.dataset}.${env.table}\``;
+    const query = `SELECT * FROM \`${env.project}.${env.dataset}.${env.table}\` ORDER BY cnpj`;
 
     try {
         const [job] = await bigquery.createQueryJob({ query, location: env.region });
+        logger.info(`Job iniciado no BigQuery: ${job.id}`, functionName);
 
-        logger.info("Job iniciado no BigQuery. Lendo resultados por streaming...", functionName);
-        const [rowsIterator] = await job.getQueryResults({ autoPaginate: false });
+        const options = {
+            maxResults: 500,
+            pageToken: undefined,
+            autoPaginate: false
+        };
 
-        let count = 0;
-        let batchSize = 500;
-        let batch = [];
+        let totalCount = 0;
 
-        for await (const row of rowsIterator) {
-            batch.push(row);
-            count++;
+        do {
+            const [rows, queryInfo] = await job.getQueryResults(options);
 
-            if (batch.length >= batchSize) {
-                logger.info(`Processando lote de ${batch.length} registros... (Total lido: ${count})`, functionName);
-                yield batch;
-                batch = []; // Reinicia o batch
+            if (rows.length === 0) {
+                logger.info('Nenhum registro retornado nesta página.', functionName);
+                break;
             }
-        }
 
-        // Se ainda houver registros no último batch, envie-os
-        if (batch.length > 0) {
-            logger.info(`Processando último lote de ${batch.length} registros... (Total lido: ${count})`, functionName);
-            yield batch;
-        }
+            totalCount += rows.length;
+            logger.info(`Processando lote de ${rows.length} registros... (Total processado: ${totalCount})`, functionName);
 
-        logger.info(`Consulta concluída. Total de registros processados: ${count}`, functionName);
-    } catch (e) {
+            yield rows;
+
+            options.pageToken = queryInfo.pageToken;
+        } while (options.pageToken);
+
+        logger.info(`Consulta concluída. Total de registros processados: ${totalCount}`, functionName);
+    } catch (error) {
         logger.error(e, functionName);
-        throw e;
+        throw error;
     }
 }
 
