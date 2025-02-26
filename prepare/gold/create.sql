@@ -121,6 +121,7 @@ CREATE OR REPLACE TABLE `cloud-cnpj.gold.estabelecimentos` (
       codigo STRING OPTIONS(description="Código do país do sócio estrangeiro."),
       descricao STRING OPTIONS(description="Nome do país do sócio estrangeiro.")
     > OPTIONS(description="País do sócio estrangeiro, se aplicável.")
-  >> OPTIONS(description="Lista de sócios vinculados ao estabelecimento.")
+  >> OPTIONS(description="Lista de sócios vinculados ao estabelecimento."),
+  data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY cnpj;
