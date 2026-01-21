@@ -16,7 +16,8 @@ CREATE TABLE `cloud-cnpj.raw.empresas` (
     qualificacao_responsavel STRING OPTIONS(description="Qualificação da pessoa física responsável pela empresa"),
     capital_social STRING OPTIONS(description="Capital social da empresa"),
     porte STRING OPTIONS(description="Código do porte da empresa: 00 - não informado, 01 - micro empresa, 03 - empresa de pequeno porte, 05 - demais"),
-    ente_federativo STRING OPTIONS(description="O ente federativo responsável é preenchido para os casos de órgãos e entidades do grupo de natureza jurídica 1XXX. Para as demais naturezas, este atributo fica em branco")
+    ente_federativo STRING OPTIONS(description="O ente federativo responsável é preenchido para os casos de órgãos e entidades do grupo de natureza jurídica 1XXX. Para as demais naturezas, este atributo fica em branco"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 PARTITION BY DATE(_PARTITIONTIME)
 CLUSTER BY cnpj_basico;
@@ -51,38 +52,44 @@ CREATE TABLE `cloud-cnpj.raw.estabelecimentos` (
     fax STRING OPTIONS(description="Contém o número do fax"),
     correio_eletronico STRING OPTIONS(description="Contém o e-mail do contribuinte"),
     situacao_especial STRING OPTIONS(description="Situação especial da empresa"),
-    data_situacao_especial STRING OPTIONS(description="Data em que a empresa entrou em situação especial")
+    data_situacao_especial STRING OPTIONS(description="Data em que a empresa entrou em situação especial"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 PARTITION BY DATE(_PARTITIONTIME)
 CLUSTER BY cnpj_basico;
 
 CREATE TABLE `cloud-cnpj.raw.motivos` (
     codigo STRING OPTIONS(description="Código identificador do motivo da situação cadastral"),
-    descricao STRING OPTIONS(description="Descrição do motivo da situação cadastral")
+    descricao STRING OPTIONS(description="Descrição do motivo da situação cadastral"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 
 CREATE TABLE `cloud-cnpj.raw.municipios` (
     codigo STRING OPTIONS(description="Código do município"),
-    descricao STRING OPTIONS(description="Nome do município")
+    descricao STRING OPTIONS(description="Nome do município"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 
 CREATE TABLE `cloud-cnpj.raw.naturezas` (
     codigo STRING OPTIONS(description="Código da natureza jurídica"),
-    descricao STRING OPTIONS(description="Nome da natureza jurídica")
+    descricao STRING OPTIONS(description="Nome da natureza jurídica"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 
 CREATE TABLE `cloud-cnpj.raw.paises` (
     codigo STRING OPTIONS(description="Código do país"),
-    descricao STRING OPTIONS(description="Nome do país")
+    descricao STRING OPTIONS(description="Nome do país"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 
 CREATE TABLE `cloud-cnpj.raw.qualificacoes` (
     codigo STRING OPTIONS(description="Código da qualificação do sócio"),
-    descricao STRING OPTIONS(description="Nome da qualificação do sócio")
+    descricao STRING OPTIONS(description="Nome da qualificação do sócio"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 
@@ -93,7 +100,8 @@ CREATE TABLE `cloud-cnpj.raw.simples` (
     data_exclusao_simples STRING OPTIONS(description="Data de exclusão do Simples"),
     opcao_pelo_mei STRING OPTIONS(description="Indicador da existência da opção pelo MEI: S - Sim, N - Não, em branco - Outros"),
     data_opcao_mei STRING OPTIONS(description="Data de opção pelo MEI"),
-    data_exclusao_mei STRING OPTIONS(description="Data de exclusão do MEI")
+    data_exclusao_mei STRING OPTIONS(description="Data de exclusão do MEI"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 PARTITION BY DATE(_PARTITIONTIME)
 CLUSTER BY cnpj_basico;
@@ -109,20 +117,23 @@ CREATE TABLE `cloud-cnpj.raw.socios` (
     representante_legal STRING OPTIONS(description="Número do CPF do representante legal"),
     nome_representante STRING OPTIONS(description="Nome do representante legal"),
     qualificacao_representante STRING OPTIONS(description="Código da qualificação do representante legal"),
-    faixa_etaria STRING OPTIONS(description="Código correspondente à faixa etária do sócio")
+    faixa_etaria STRING OPTIONS(description="Código correspondente à faixa etária do sócio"),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 PARTITION BY DATE(_PARTITIONTIME)
 CLUSTER BY cnpj_basico;
 
 CREATE TABLE `cloud-cnpj.raw.portes` (
     codigo STRING OPTIONS(description="Código do porte da empresa."),
-    descricao STRING OPTIONS(description="Descrição do porte da empresa.")
+    descricao STRING OPTIONS(description="Descrição do porte da empresa."),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 
 CREATE OR REPLACE TABLE `cloud-cnpj.raw.situacoes` (
     codigo STRING OPTIONS(description="Código da situação cadastral do estabelecimento."),
-    descricao STRING OPTIONS(description="Descrição da situação cadastral.")
+    descricao STRING OPTIONS(description="Descrição da situação cadastral."),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP OPTIONS(description="Data e hora de criação do registro")
 )
 CLUSTER BY codigo;
 

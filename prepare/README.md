@@ -59,6 +59,7 @@ Além disso, ao final, o arquivo CSV é excluído do Storage após a importaçã
 | `socios-storage-bq` | `gs://cloud-cnpj/socios/*.csv` | `raw` | `socios` |
 
 > Este procedimento não é agendado pois é controlado por um workflow.
+> As entidades possuem o campo `data_criacao` que indica a data e hora de inserção daquele registro em cada tabela.
 
 ### 2. Camada gold
 
@@ -71,6 +72,7 @@ Esses dados são gerados por meio de execuções de [query agendadas do BigQuery
 | `estabelecimentos` | `gold` | Unifica e trata todos os dados de empresas, sócios, estabelecimentos e demais entidades |
 
 > Este procedimento não é agendado pois é controlado por um workflow.
+> A entidade possui o campo `data_criacao` que indica a data e hora de inserção daquele registro na tabela.
 
 ## 💵 Custos
 
