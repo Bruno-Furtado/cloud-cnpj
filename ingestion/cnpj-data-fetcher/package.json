@@ -10,14 +10,13 @@
     "start": "node --no-warnings src/main.js"
   },
   "dependencies": {
-    "@google-cloud/logging": "11.2.0",
-    "@google-cloud/storage": "7.15.0",
-    "@slack/webhook": "7.0.4",
-    "axios": "1.7.9",
+    "@google-cloud/logging": "11.2.1",
+    "@google-cloud/storage": "7.19.0",
+    "@slack/webhook": "7.0.7",
+    "axios": "1.13.5",
     "axios-retry": "4.5.0",
-    "dotenv": "16.4.7",
-    "iconv-lite": "0.6.3",
-    "node-html-parser": "7.0.1",
+    "dotenv": "17.3.1",
+    "iconv-lite": "0.7.2",
     "unzipper": "0.12.3"
   },
   "author": {
