@@ -8,7 +8,8 @@ REGION="us-central1"
 JOB_NAME="cnpj-data-fetcher"
 REPO_NAME=$JOB_NAME
 IMAGE=$JOB_NAME
-RECEITA_FEDERAL_URL="https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj"
+RECEITA_FEDERAL_URL="https://arquivos.receitafederal.gov.br"
+NEXTCLOUD_SHARE_TOKEN="YggdBLfdninEJX9"
 SLACK_WEBHOOK_URL=""
 SLACK_NOTIFICATIONS_ENABLED="false"
 
@@ -55,5 +56,6 @@ gcloud run jobs create $JOB_NAME \
     --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT \
     --set-env-vars GOOGLE_CLOUD_BUCKET=$BUCKET \
     --set-env-vars RECEITA_FEDERAL_URL=$RECEITA_FEDERAL_URL \
+    --set-env-vars NEXTCLOUD_SHARE_TOKEN=$NEXTCLOUD_SHARE_TOKEN \
     --set-env-vars SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL \
     --set-env-vars SLACK_NOTIFICATIONS_ENABLED=$SLACK_NOTIFICATIONS_ENABLED
