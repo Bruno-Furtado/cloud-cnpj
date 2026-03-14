@@ -15,7 +15,7 @@ import logger from '../util/logger.js';
 const fileFromUrl = async (period, fileName, destination) => {
     const functionName = helper.getStackTraceDetails();
     const fileUrl = `${period}/${fileName}`;
-    const fullUrl = `${env.receitaFederalUrl}/${fileUrl}`;
+    const fullUrl = `${env.receitaFederalUrl}/public.php/webdav/${fileUrl}`;
 
     if (fs.existsSync(destination)) {
         logger.info(`Arquivo ${fileName} já existe em ${destination}. Pulando download.`, functionName);
@@ -47,6 +47,13 @@ const fileFromUrl = async (period, fileName, destination) => {
 
         return new Promise((resolve, reject) => {
             writer.on('finish', () => {
+                if (totalBytes && receivedBytes < totalBytes) {
+                    const err = new Error(`Download incompleto de ${fileName}: recebido ${receivedBytes} de ${totalBytes} bytes`);
+                    logger.error(err, functionName);
+                    fs.unlinkSync(destination);
+                    reject(err);
+                    return;
+                }
                 logger.info(`Arquivo ${fileName} baixado com sucesso (${(receivedBytes / (1024 * 1024)).toFixed(2)} MB)`, functionName);
                 resolve(destination);
             });

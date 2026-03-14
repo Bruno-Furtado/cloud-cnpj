@@ -20,6 +20,7 @@ const env = {
     bucket: process.env.GOOGLE_CLOUD_BUCKET,
 
     receitaFederalUrl: process.env.RECEITA_FEDERAL_URL,
+    nextcloudShareToken: process.env.NEXTCLOUD_SHARE_TOKEN,
     
     logEnabled: process.env.LOG_ENABLED === 'true',
     slackEnabled: process.env.SLACK_NOTIFICATIONS_ENABLED === 'true',

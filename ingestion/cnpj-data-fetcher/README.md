@@ -15,7 +15,7 @@ Este é um [Cloud Run Job](https://cloud.google.com/run/docs/create-jobs), const
 │   ├── service/
 │   │   ├── download.js    # Download do arquivo ZIP da Receita
 │   │   ├── extract.js     # Extração do arquivo CSV oriundo do ZIP
-│   │   ├── scraping.js    # Scraping da página da Receita
+│   │   ├── scraping.js    # Listagem de diretórios e arquivos via WebDAV (Nextcloud)
 │   │   ├── storage.js     # Manipulação de arquivos no GCS
 │   │
 │   ├── util/
@@ -35,11 +35,11 @@ Este é um [Cloud Run Job](https://cloud.google.com/run/docs/create-jobs), const
 
 Este job será executado 1x por dia na **região** `us-central1`, com 2 CPUs, 8GB de memória, sem retry e criação de apenas 1 task. Quando há atualização de dados (uma vez por mês), o processo dura cerca de 3 horas. Nas outras execuções, ele leva menos de 1 minuto, pois apenas verifica se precisa ser executado (isto é feito pois não sabemos o dia em que a receita proverá a atualização).
 
-### 1. Scraping do repositório da Receita Federal
+### 1. Listagem dos dados via WebDAV (Nextcloud)
 
-Inicialmente, é realizada uma chamada para o repositório oficial da Receita Federal.
+Inicialmente, é realizada uma consulta ao repositório oficial da Receita Federal, que utiliza o [Nextcloud](https://nextcloud.com/) com compartilhamento público via WebDAV.
 
-Em seguida, identificamos a última versão dos dados disponível, pois a Receita gera todos os dados mensalmente e os organiza em diretórios, como `2025-01`, representando janeiro de 2025.
+Através de requisições `PROPFIND`, identificamos a última versão dos dados disponível, pois a Receita gera todos os dados mensalmente e os organiza em diretórios, como `2026-01`, representando janeiro de 2026.
 
 Após identificar o diretório mais atual, os nomes dos arquivos ZIP também são obtidos para posterior download.
 
@@ -100,7 +100,8 @@ Crie um arquivo `.env` na raiz do projeto:
 PROCESS=cnpj-data-fetcher
 GOOGLE_CLOUD_PROJECT=cloud-cnpj
 GOOGLE_CLOUD_BUCKET=cloud-cnpj
-RECEITA_FEDERAL_URL=https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj
+RECEITA_FEDERAL_URL=https://arquivos.receitafederal.gov.br
+NEXTCLOUD_SHARE_TOKEN=YggdBLfdninEJX9
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 LOG_ENABLED=true
 SLACK_NOTIFICATIONS_ENABLED=false

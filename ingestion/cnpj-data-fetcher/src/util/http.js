@@ -3,8 +3,12 @@ import axiosRetry from 'axios-retry';
 import env from '../config/env.js';
 
 const axiosInstance = axios.create({
-    baseURL: env.receitaFederalUrl,
-    headers: { 'User-Agent': 'Mozilla/5.0' } // Evita bloqueios de servidores
+    baseURL: `${env.receitaFederalUrl}/public.php/webdav`,
+    timeout: 0,
+    headers: {
+        'User-Agent': 'Mozilla/5.0',
+        'Authorization': `Basic ${Buffer.from(`${env.nextcloudShareToken}:`).toString('base64')}`
+    }
 });
 
 // Configuração de retry para evitar falhas temporárias
