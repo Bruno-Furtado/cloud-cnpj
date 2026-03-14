@@ -3,7 +3,7 @@ import axiosRetry from 'axios-retry';
 import env from '../config/env.js';
 
 const axiosInstance = axios.create({
-    baseURL: `${env.receitaFederalUrl}/public.php/webdav`,
+    baseURL: `${env.receitaFederalUrl}/public.php/webdav${env.nextcloudBasePath}`,
     timeout: 0,
     headers: {
         'User-Agent': 'Mozilla/5.0',

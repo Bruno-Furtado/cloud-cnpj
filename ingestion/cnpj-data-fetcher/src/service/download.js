@@ -15,7 +15,7 @@ import logger from '../util/logger.js';
 const fileFromUrl = async (period, fileName, destination) => {
     const functionName = helper.getStackTraceDetails();
     const fileUrl = `${period}/${fileName}`;
-    const fullUrl = `${env.receitaFederalUrl}/public.php/webdav/${fileUrl}`;
+    const fullUrl = `${env.receitaFederalUrl}/public.php/webdav${env.nextcloudBasePath}/${fileUrl}`;
 
     if (fs.existsSync(destination)) {
         logger.info(`Arquivo ${fileName} já existe em ${destination}. Pulando download.`, functionName);

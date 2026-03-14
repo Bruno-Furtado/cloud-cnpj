@@ -21,6 +21,7 @@ const env = {
 
     receitaFederalUrl: process.env.RECEITA_FEDERAL_URL,
     nextcloudShareToken: process.env.NEXTCLOUD_SHARE_TOKEN,
+    nextcloudBasePath: process.env.NEXTCLOUD_BASE_PATH || '',
     
     logEnabled: process.env.LOG_ENABLED === 'true',
     slackEnabled: process.env.SLACK_NOTIFICATIONS_ENABLED === 'true',
