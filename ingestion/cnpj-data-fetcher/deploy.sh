@@ -9,7 +9,8 @@ JOB_NAME="cnpj-data-fetcher"
 REPO_NAME=$JOB_NAME
 IMAGE=$JOB_NAME
 RECEITA_FEDERAL_URL="https://arquivos.receitafederal.gov.br"
-NEXTCLOUD_SHARE_TOKEN="YggdBLfdninEJX9"
+NEXTCLOUD_SHARE_TOKEN="gn672Ad4CF8N6TK"
+NEXTCLOUD_BASE_PATH="/Dados/Cadastros/CNPJ"
 SLACK_WEBHOOK_URL=""
 SLACK_NOTIFICATIONS_ENABLED="false"
 
@@ -30,10 +31,10 @@ gcloud services enable run.googleapis.com \
     artifactregistry.googleapis.com \
     cloudscheduler.googleapis.com
 
-# Cria repositório de artifacts para armazenar as images
+# Cria repositório de artifacts para armazenar as images (ignora se já existe)
 gcloud artifacts repositories create $REPO_NAME \
     --repository-format=docker \
-    --location=$REGION
+    --location=$REGION 2>/dev/null || true
 
 # Configura o docker
 gcloud auth configure-docker $REGION-docker.pkg.dev
@@ -43,9 +44,8 @@ docker build --platform=linux/amd64 -t $IMAGE .
 docker tag $IMAGE $REGION-docker.pkg.dev/$PROJECT/$REPO_NAME/$IMAGE:latest
 docker push $REGION-docker.pkg.dev/$PROJECT/$REPO_NAME/$IMAGE:latest
 
-# Cria o job no Cloud Run
-gcloud run jobs create $JOB_NAME \
-    --image $REGION-docker.pkg.dev/$PROJECT/$REPO_NAME/$IMAGE:latest \
+# Cria ou atualiza o job no Cloud Run
+JOB_FLAGS="--image $REGION-docker.pkg.dev/$PROJECT/$REPO_NAME/$IMAGE:latest \
     --region $REGION \
     --task-timeout=43200s \
     --memory=8Gi \
@@ -57,5 +57,12 @@ gcloud run jobs create $JOB_NAME \
     --set-env-vars GOOGLE_CLOUD_BUCKET=$BUCKET \
     --set-env-vars RECEITA_FEDERAL_URL=$RECEITA_FEDERAL_URL \
     --set-env-vars NEXTCLOUD_SHARE_TOKEN=$NEXTCLOUD_SHARE_TOKEN \
+    --set-env-vars NEXTCLOUD_BASE_PATH=$NEXTCLOUD_BASE_PATH \
     --set-env-vars SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL \
-    --set-env-vars SLACK_NOTIFICATIONS_ENABLED=$SLACK_NOTIFICATIONS_ENABLED
+    --set-env-vars SLACK_NOTIFICATIONS_ENABLED=$SLACK_NOTIFICATIONS_ENABLED"
+
+if gcloud run jobs describe $JOB_NAME --region $REGION &>/dev/null; then
+    gcloud run jobs update $JOB_NAME $JOB_FLAGS
+else
+    gcloud run jobs create $JOB_NAME $JOB_FLAGS
+fi
