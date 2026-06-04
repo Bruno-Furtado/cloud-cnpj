@@ -1,4 +1,4 @@
-![Data Updated](https://img.shields.io/badge/Data_Updated-2026/04-green)
+![Data Updated](https://img.shields.io/badge/Data_Updated-2026/05-green)
 
 <p>
     <small>🇧🇷 <a href="README.md">Versão em português</a></small>
