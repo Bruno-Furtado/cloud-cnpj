@@ -1,0 +1,23 @@
+displayName: "cloud-cnpj - falha no workflow"
+documentation:
+  content: |
+    Um erro foi registrado durante a execução do workflow de ingestão dos dados de CNPJ.
+
+    Possíveis origens: falha do Cloud Run Job de ingestão, falha em algum Data Transfer
+    do BigQuery ou erro na própria execução do workflow.
+
+    Consulte as execuções em:
+    https://console.cloud.google.com/workflows/workflow/us-central1/cloud-cnpj/executions
+  mimeType: "text/markdown"
+combiner: OR
+conditions:
+  - displayName: "Log de erro no workflow cloud-cnpj"
+    conditionMatchedLog:
+      filter: |-
+        resource.type="workflows.googleapis.com/Workflow"
+        resource.labels.workflow_id="cloud-cnpj"
+        severity>=ERROR
+alertStrategy:
+  notificationRateLimit:
+    period: 300s
+enabled: true
