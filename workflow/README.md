@@ -5,8 +5,11 @@ Este é o orquestrador de tarefas do projeto, criado a partir do [Google Workflo
 ## 🏗 Estrutura
 
 ```
-├── cloud-cnpj.yaml   # Fluxo de orquestração de tarefas
-├── deploy.sh         # Script para criação do workflow
+├── cloud-cnpj.yaml    # Fluxo de orquestração de tarefas
+├── alert-policy.yaml  # Política de alerta por e-mail em caso de falha
+├── deploy.sh          # Script para criação do workflow
+├── deploy-alerts.sh   # Script para criação do alerta
+├── deploy-wif.sh      # Script para autenticação do GitHub Actions no GCP
 ├── README.md
 ```
 
@@ -50,7 +53,8 @@ Novamente, caso ainda não tenha verificado, certifique-se de possuir o [Google 
 gcloud workflows execute $FLOW_NAME \
     --location=$LOCATION \
     --data='{
-      "job_name": $JOB_NAME,
+      "ingestion_job_name": $INGESTION_JOB_NAME,
+      "use_job_name": $USE_JOB_NAME,
       "location": $LOCATION,
       "project_id": $PROJECT_ID,
       "slack_webhook_url": $SLACK_WEBHOOK_URL,
@@ -72,6 +76,48 @@ gcloud workflows execute $FLOW_NAME \
       ]
     }'
 ```
+
+O campo `slack_webhook_url` é opcional: quando ausente ou vazio, nenhuma notificação externa é enviada, e uma eventual falha no envio nunca interrompe a execução.
+
+
+## 🤖 Execução automática
+
+O workflow é disparado uma vez por mês pelo GitHub Actions, através de [`monthly-pipeline.yml`](../.github/workflows/monthly-pipeline.yml), no dia 15 às 09:00 UTC (06:00 BRT). O job apenas dispara a execução — que pode levar horas — e encerra, atualizando na sequência o badge de dados atualizados no [`README.md`](../README.md) e no [`README_en.md`](../README_en.md) com um commit automático.
+
+Para disparar sob demanda:
+
+```
+gh workflow run monthly-pipeline.yml
+gh workflow run monthly-pipeline.yml -f badge_month=2026/07   # forçando o mês do badge
+```
+
+### Configuração
+
+A autenticação usa [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation), sem chaves de longa duração: a cada execução o GitHub emite um token OIDC que o Google troca por credenciais temporárias. Execute o script [`deploy-wif.sh`](./deploy-wif.sh), que cria a service account, o pool, o provider OIDC e as permissões, e ao final imprime os comandos dos segredos.
+
+O acesso é restrito a este repositório em duas camadas: o provider só aceita tokens cujo `assertion.repository` seja `Bruno-Furtado/cloud-cnpj`, e a permissão de personificar a service account é concedida apenas ao `principalSet` desse mesmo repositório. Forks não conseguem se autenticar.
+
+São necessários três segredos:
+
+| Secret | Conteúdo |
+|--------|----------|
+| `GCP_WIF_PROVIDER` | Caminho completo do provider (impresso pelo `deploy-wif.sh`) |
+| `GCP_SA_EMAIL` | E-mail da service account (impresso pelo `deploy-wif.sh`) |
+| `CNPJ_WORKFLOW_CONFIG` | O JSON passado em `--data` na seção anterior |
+
+```
+gh secret set CNPJ_WORKFLOW_CONFIG < /tmp/payload.json
+rm /tmp/payload.json
+```
+
+A role `roles/workflows.invoker` é suficiente: quem chama o Cloud Run Job e os Data Transfers é a service account do próprio workflow.
+
+
+## 🔔 Alertas
+
+Como o job do GitHub Actions encerra assim que dispara a execução, o acompanhamento acontece pelo Google Cloud Monitoring: qualquer log com severidade `ERROR` no workflow — falha do Cloud Run Job, falha de um Data Transfer ou erro da própria execução — gera um e-mail.
+
+Basta executar o script [`deploy-alerts.sh`](./deploy-alerts.sh), lembrando de configurar as variáveis no início do arquivo. Na primeira execução o Google envia um e-mail de confirmação que precisa ser aceito para o canal ficar ativo.
 
 
 

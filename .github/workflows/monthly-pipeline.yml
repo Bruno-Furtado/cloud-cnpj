@@ -1,0 +1,81 @@
+name: Monthly data refresh
+
+on:
+  schedule:
+    - cron: '0 9 15 * *'  # dia 15 às 09:00 UTC = 06:00 BRT
+  workflow_dispatch:
+    inputs:
+      badge_month:
+        description: 'Mês do badge no formato YYYY/MM (padrão: mês corrente em UTC)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: monthly-pipeline
+  cancel-in-progress: false
+
+env:
+  GCP_PROJECT: cloud-cnpj
+  GCP_REGION: us-central1
+  GCP_WORKFLOW: cloud-cnpj
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Trigger workflow execution
+        env:
+          WORKFLOW_CONFIG: ${{ secrets.CNPJ_WORKFLOW_CONFIG }}
+        run: |
+          EXECUTION=$(gcloud workflows execute "$GCP_WORKFLOW" \
+            --project="$GCP_PROJECT" \
+            --location="$GCP_REGION" \
+            --data="$WORKFLOW_CONFIG" \
+            --format='value(name)')
+          echo "Execução iniciada: \`$EXECUTION\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Acompanhe em https://console.cloud.google.com/workflows/workflow/$GCP_REGION/$GCP_WORKFLOW/executions?project=$GCP_PROJECT" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Update data updated badge
+        env:
+          BADGE_MONTH_INPUT: ${{ inputs.badge_month }}
+        run: |
+          MONTH="$BADGE_MONTH_INPUT"
+          if [ -z "$MONTH" ]; then
+            MONTH=$(date -u +%Y/%m)
+          elif ! echo "$MONTH" | grep -Eq '^[0-9]{4}/[0-9]{2}$'; then
+            echo "badge_month inválido: '$MONTH' (esperado YYYY/MM)" >&2
+            exit 1
+          fi
+          sed -i -E "s#(Dados_Atualizados-)[0-9]{4}/[0-9]{2}(-green)#\1${MONTH}\2#" README.md
+          sed -i -E "s#(Data_Updated-)[0-9]{4}/[0-9]{2}(-green)#\1${MONTH}\2#" README_en.md
+          echo "BADGE_MONTH=$MONTH" >> "$GITHUB_ENV"
+
+      - name: Commit badge update
+        run: |
+          if git diff --quiet -- README.md README_en.md; then
+            echo "Badge já estava em $BADGE_MONTH, nada a commitar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md README_en.md
+          git commit -m "chore: update data updated badge to $BADGE_MONTH"
+          git push
