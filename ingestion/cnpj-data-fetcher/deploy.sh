@@ -48,8 +48,8 @@ docker push $REGION-docker.pkg.dev/$PROJECT/$REPO_NAME/$IMAGE:latest
 JOB_FLAGS="--image $REGION-docker.pkg.dev/$PROJECT/$REPO_NAME/$IMAGE:latest \
     --region $REGION \
     --task-timeout=43200s \
-    --memory=8Gi \
-    --cpu=2 \
+    --memory=16Gi \
+    --cpu=4 \
     --max-retries=0 \
     --tasks=1 \
     --set-env-vars PROCESS=$JOB_NAME \
