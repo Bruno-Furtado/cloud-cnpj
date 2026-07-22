@@ -49,7 +49,7 @@ jobs:
             --project="$GCP_PROJECT" \
             --location="$GCP_REGION" \
             --data="$WORKFLOW_CONFIG" \
-            --format='value(name)')
+            --format='value(name.basename())')
           echo "Execução iniciada: \`$EXECUTION\`" >> "$GITHUB_STEP_SUMMARY"
           echo "Acompanhe em https://console.cloud.google.com/workflows/workflow/$GCP_REGION/$GCP_WORKFLOW/executions?project=$GCP_PROJECT" >> "$GITHUB_STEP_SUMMARY"
 
