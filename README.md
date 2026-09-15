@@ -1,4 +1,4 @@
-![Dados Atualizados](https://img.shields.io/badge/Dados_Atualizados-2026/08-green)
+![Dados Atualizados](https://img.shields.io/badge/Dados_Atualizados-2026/09-green)
 
 
 <p>
